@@ -1,0 +1,56 @@
+make -C ../src clean
+make[1]: Entering directory '/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src'
+rm -f ring_buffer.o producer.o consumer.o packet.o ../utils/log/log.o serial.o firewall.o
+rm -f firewall serial
+make[1]: Leaving directory '/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src'
+rm -f *~
+rm -rf __pycache__
+rm -rf out
+make -i SRC_PATH=../src
+make[1]: Entering directory '/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/tests'
+make -C ../src UTILS_PATH=/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils
+make[2]: Entering directory '/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src'
+cc -Wall -Wextra -ggdb -O0 -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils  -c -o ring_buffer.o ring_buffer.c
+cc -Wall -Wextra -ggdb -O0 -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils  -c -o producer.o producer.c
+cc -Wall -Wextra -ggdb -O0 -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils  -c -o consumer.o consumer.c
+consumer.c: In function ‘create_consumers’:
+consumer.c:47:52: warning: passing argument 3 of ‘pthread_create’ from incompatible pointer type [-Wincompatible-pointer-types]
+   47 |                 if (pthread_create(&tids[i], NULL, &consumer_thread, args) != 0)
+      |                                                    ^~~~~~~~~~~~~~~~
+      |                                                    |
+      |                                                    void (*)(so_consumer_ctx_t *)
+In file included from consumer.c:3:
+/usr/include/pthread.h:204:36: note: expected ‘void * (*)(void *)’ but argument is of type ‘void (*)(so_consumer_ctx_t *)’
+  204 |                            void *(*__start_routine) (void *),
+      |                            ~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+cc -Wall -Wextra -ggdb -O0 -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils  -c -o packet.o packet.c
+cc -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils -Wall -Wextra -ggdb -O0 -c -o /home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils/log/log.o  /home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils/log/log.c
+cc -Wall -Wextra -ggdb -O0 -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils  -c -o firewall.o firewall.c
+cc -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils -Wall -Wextra -ggdb -O0 -o firewall ring_buffer.o producer.o consumer.o packet.o /home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils/log/log.o firewall.o -lpthread
+/usr/bin/ld: firewall.o:/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src/consumer.h:9: multiple definition of `output_mutex'; consumer.o:/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src/consumer.h:9: first defined here
+collect2: error: ld returned 1 exit status
+make[2]: [Makefile:18: firewall] Error 1 (ignored)
+cc -Wall -Wextra -ggdb -O0 -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils  -c -o serial.o serial.c
+cc -I/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils -Wall -Wextra -ggdb -O0 -o serial ring_buffer.o producer.o consumer.o packet.o /home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/utils/log/log.o serial.o -lpthread
+/usr/bin/ld: serial.o:/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src/consumer.h:9: multiple definition of `output_mutex'; consumer.o:/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src/consumer.h:9: first defined here
+collect2: error: ld returned 1 exit status
+make[2]: [Makefile:21: serial] Error 1 (ignored)
+make[2]: Leaving directory '/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/src'
+make[1]: Leaving directory '/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/tests'
+SRC_PATH=../src python3 checker.py
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Generating test cases ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Generate ./in/test_10.in      and ./ref/test_10.ref    
+Traceback (most recent call last):
+  File "/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/tests/checker.py", line 351, in <module>
+    main()
+  File "/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/tests/checker.py", line 321, in main
+    if not generate_tests(TEST_SIZES):
+  File "/home/vlad/student/anul_2/SO/tema3/assignment-parallel-firewall/tests/checker.py", line 87, in generate_tests
+    with subprocess.Popen([serial_imp, test_file_in, test_file_ref]) as serial_proc:
+  File "/usr/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '../src/serial'
+make: *** [Makefile:13: check] Error 1
